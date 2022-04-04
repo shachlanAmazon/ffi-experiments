@@ -1,4 +1,4 @@
-use std::ffi::CString;
+use std::ffi::{CString};
 use std::os::raw::c_char;
 
 #[no_mangle]
@@ -26,18 +26,34 @@ pub extern "C" fn get_string() -> *const c_char {
     p
 }
 
+#[repr(C)]
+pub enum CResult<T, E> {
+    Ok(T),
+    Err(E),
+    Maybe,
+}
+
+#[no_mangle]
+pub extern "C" fn get_string_with_result(should_return: i32) -> CResult<*const c_char, usize> {
+    let source_str = if should_return == 1 {"get_string\0_with_result foobar" } else {"get_string_with_result foobar"};
+    let str = CString::new(source_str);
+    match str{
+        Err(e) => CResult::Err(e.nul_position()),
+        Ok(v) => {
+            let p = v.as_ptr();
+            std::mem::forget(v);
+            CResult::Ok(p)
+        }
+    }
+}
+
 #[no_mangle]
 pub extern "C" fn concat_string(input: *mut c_char) -> *const c_char {
     unsafe {
-        print!("bef");
         let cstr = CString::from_raw(input);
-        print!("first");
         let str = cstr.into_string().expect("ti worked?");
-        print!("sec");
         let concat = format!("{str}{str}");
-        print!("3rd");
         let result = CString::new(concat).expect("second new failed");
-        print!("4th");
         let p = result.as_ptr();
         std::mem::forget(str);
         std::mem::forget(result);
