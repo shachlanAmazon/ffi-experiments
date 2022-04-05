@@ -43,18 +43,19 @@ public static class main
 
   public static void Main()
   {
-    for (int i = 0; i < 5; i++)
-    {
-      Console.WriteLine(GetStringWithResult(1).tag);
-      Console.WriteLine(GetStringWithResult(1).err);
-      Console.WriteLine(GetStringWithResult(0).tag);
-      Console.WriteLine(GetStringWithResult(0).value);
-      Console.WriteLine(GetStringWithResult(0).GetValue());
-      Console.WriteLine(GetString());
-      Console.WriteLine(CountString("so again"));
-      Console.WriteLine(GetValue());
-      Console.WriteLine(ConcatString("foobar"));
-    }
+    Console.WriteLine("GetStringWithResult");
+    Console.WriteLine(GetStringWithResult(1).tag);
+    Console.WriteLine(GetStringWithResult(1).err);
+    Console.WriteLine(GetStringWithResult(0).tag);
+    Console.WriteLine(GetStringWithResult(0).GetValue());
+    Console.WriteLine("\nGetString");
+    Console.WriteLine(GetString());
+    Console.WriteLine("\nCountString");
+    Console.WriteLine(CountString("so again"));
+    Console.WriteLine("\nGetValue");
+    Console.WriteLine(GetValue());
+    Console.WriteLine("\nConcatString");
+    Console.WriteLine(ConcatString("foobar"));
     Console.WriteLine("done");
   }
 }
