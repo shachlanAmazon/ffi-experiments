@@ -41,8 +41,19 @@ public static class main
   public static extern CResult GetStringWithResult(int i);
 
 
+  public delegate int IntToInt(int number);
+  [DllImport("rust_ffi", CallingConvention = CallingConvention.Cdecl, EntryPoint = "call_callback")]
+  public static extern int CallCallback(IntToInt fn);
+
+  static int IncrementByTwo(int input)
+  {
+    return input + 2;
+  }
+
   public static void Main()
   {
+    Console.WriteLine("CallCallback");
+    Console.WriteLine(CallCallback(IncrementByTwo));
     Console.WriteLine("GetStringWithResult");
     Console.WriteLine(GetStringWithResult(1).tag);
     Console.WriteLine(GetStringWithResult(1).err);

@@ -8,6 +8,11 @@ pub extern "C" fn get_val() -> i32 {
 }
 
 #[no_mangle]
+pub extern "C" fn call_callback(callback: unsafe extern "C" fn(i32) -> i32) -> i32 {
+    unsafe { callback(1) + 1 }
+}
+
+#[no_mangle]
 pub extern "C" fn count_string(input: *mut c_char) -> usize {
     unsafe {
         let cstr = CString::from_raw(input);
