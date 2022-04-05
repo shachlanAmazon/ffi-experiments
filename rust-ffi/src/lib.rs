@@ -13,6 +13,11 @@ pub extern "C" fn call_callback(callback: unsafe extern "C" fn(i32) -> i32) -> i
 }
 
 #[no_mangle]
+pub extern "C" fn call_callback_no_return(callback: unsafe extern "C" fn(i32)) {
+    unsafe { callback(42); }
+}
+
+#[no_mangle]
 pub extern "C" fn count_string(input: *mut c_char) -> usize {
     unsafe {
         let cstr = CString::from_raw(input);

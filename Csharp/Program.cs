@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 [StructLayout(LayoutKind.Explicit)]
 public struct CResult
@@ -45,13 +47,29 @@ public static class main
   [DllImport("rust_ffi", CallingConvention = CallingConvention.Cdecl, EntryPoint = "call_callback")]
   public static extern int CallCallback(IntToInt fn);
 
+  public delegate void IntAction(int number);
+  [DllImport("rust_ffi", CallingConvention = CallingConvention.Cdecl, EntryPoint = "call_callback_no_return")]
+  public static extern void CallCallbackNoReturn(IntAction fn);
+
   static int IncrementByTwo(int input)
   {
     return input + 2;
   }
 
-  public static void Main()
+  static async Task<int> ToTask()
   {
+    var taskSource = new TaskCompletionSource<int>();
+    CallCallbackNoReturn((res) =>
+    {
+      taskSource.SetResult(res);
+    });
+    return await taskSource.Task;
+  }
+
+  public static async Task Main()
+  {
+    Console.WriteLine("CallCallbackNoReturn");
+    Console.WriteLine(await ToTask());
     Console.WriteLine("CallCallback");
     Console.WriteLine(CallCallback(IncrementByTwo));
     Console.WriteLine("GetStringWithResult");
