@@ -59,11 +59,15 @@ public static class main
   static async Task<int> ToTask()
   {
     var taskSource = new TaskCompletionSource<int>();
+    Console.WriteLine("Start task: " + DateTime.Now);
     CallCallbackNoReturn((res) =>
     {
       taskSource.SetResult(res);
     });
-    return await taskSource.Task;
+    var result = await taskSource.Task;
+
+    Console.WriteLine("End task: " + DateTime.Now);
+    return result;
   }
 
   public static async Task Main()

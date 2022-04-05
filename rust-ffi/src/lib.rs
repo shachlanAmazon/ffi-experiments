@@ -1,5 +1,7 @@
 use std::ffi::{CString};
 use std::os::raw::c_char;
+use std::thread;
+use std::time::Duration;
 
 #[no_mangle]
 pub extern "C" fn get_val() -> i32 {
@@ -14,7 +16,10 @@ pub extern "C" fn call_callback(callback: unsafe extern "C" fn(i32) -> i32) -> i
 
 #[no_mangle]
 pub extern "C" fn call_callback_no_return(callback: unsafe extern "C" fn(i32)) {
-    unsafe { callback(42); }
+    thread::spawn(move || {
+        thread::sleep(Duration::from_millis(3000));
+        unsafe { callback(42); }
+    });
 }
 
 #[no_mangle]
